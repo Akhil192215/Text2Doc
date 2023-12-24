@@ -2,6 +2,8 @@ package handler
 
 import (
 	"fmt"
+	"os"
+	"text2doc/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,8 +21,20 @@ func GenerateDoc(c *fiber.Ctx) error {
 	}
 
 	docHTML := payload.DocHTML
+	utils.GeneratePDF(docHTML)
 
-	fmt.Printf("Received HTML string from the client: %s\n", docHTML)
+	pdfFilePath := fmt.Sprintf("assets/document.pdf")
+	pdfData, err := os.ReadFile(pdfFilePath)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Error reading PDF file")
+	}
+	c.Set("Content-Type", "application/pdf")
+	c.Set("Content-Disposition", "attachment; filename=meeting.pdf")
+	// defer func() {
+	// 	if err := os.Remove(pdfFilePath); err != nil {
+	// 		log.Println("Error deleting PDF file:", err)
+	// 	}
+	// }()
 
-	return c.SendString("HTML string received successfully")
+	return c.Send(pdfData)
 }
