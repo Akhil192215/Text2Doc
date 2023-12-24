@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-// import { resizeAllImages } from "./TextEditor.utils";
+
 
 const defaultToolbar =
   "formatselect | " +
@@ -8,7 +8,7 @@ const defaultToolbar =
   "link table bullist numlist outdent indent | " +
   "removeformat | fullscreen | help";
 
-const TextEditor = React.forwardRef(
+export const TextEditor = React.forwardRef(
   (
     {
       id = "",
@@ -33,21 +33,6 @@ const TextEditor = React.forwardRef(
     const childRef = useRef(null);
     let ref: any = parentRef || childRef;
 
-    // const uploadHandler = async (blobInfo:any, success:any, failure:any) => {
-    //   // const { base64, blob, blobUri, filename, id, name, uri } = blobInfo;
-    //   const formData = new FormData();
-    //   formData.append("file", blobInfo.blob());
-    //   if (pocId) {
-    //     formData.append("pocId", pocId);
-    //   }
-    //   formData.append("isListable", "false"); // Need to pass this as a string because FormData doesn't support booleans
-    //   const { data } = await axios.post("/files/upload", formData, {
-    //     headers: { "content-type": "multipart/form-data" }
-    //   });
-    //   success(data.fileDownloadUrl);
-    //   // success("data:image/png;base64," + base64());
-    // };
-
     const updateEditMode = () => {
       const editorElement = ref.current.getElement();
       if (editorElement) {
@@ -68,9 +53,6 @@ const TextEditor = React.forwardRef(
             statusbarEl[0].className = "tox-statusbar";
           }
         }
-        // Forcing the focus on the editor
-        // ref.current.getBody().setAttribute("contenteditable", true);
-        // ref.current.focus();
       }
     };
 
@@ -119,43 +101,22 @@ const TextEditor = React.forwardRef(
           tinymceScriptSrc="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.10.5/tinymce.min.js"
           onInit={(evt, editor) => {
             ref.current = editor;
-            // editor.getBody().setAttribute("spellcheck", true);
             if (contextmenu.length) {
               contextmenu.map((ctx: any, i: number) => {
                 editor.ui.registry.addMenuItem(
                   ctx.name || `contextmenu-${i + 1}`,
                   {
                     text: ctx.text || "Context Menu",
-                    // context: ctx?.context || "tools",
                     onAction: ctx.action || null,
                   },
                 );
               });
             }
             updateEditMode();
-
-            // editor.on("ResizeEditor", debounce(onResizeEditor, 500));
-
-            // // Resizing all images, when pasted
-            // editor.on("PastePreProcess", function () {
-            //   resizeAllImages(editor);
-            // });
-
-            // // Resizing all images, when added via "SetContent"
-            // editor.on("SetContent", function () {
-            //   resizeAllImages(editor);
-            // });
-
-            /*
-             * If TinyMCE's modal is outside of a HeadlessUI modal, then we move it inside,
-             * so that the Headless' UI focus trap doesn't prevent interaction
-             */
             document.addEventListener(
               "focusin",
               moveTinyMceInsideHeadlessUiModal,
             );
-
-            // editor.on("click", redirectToRequirement);
           }}
           onEditorChange={onChange}
           initialValue={defaultValue}
@@ -236,7 +197,6 @@ const TextEditor = React.forwardRef(
 
           `,
             paste_data_images: true,
-            // images_upload_handler: uploadHandler,
             nonbreaking_force_tab: true,
           }}
           {...props}
@@ -246,4 +206,4 @@ const TextEditor = React.forwardRef(
   },
 );
 
-export default TextEditor;
+
