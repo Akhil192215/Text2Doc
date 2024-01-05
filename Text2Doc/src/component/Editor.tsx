@@ -22,7 +22,7 @@ export const TextEditor = React.forwardRef(
       editable,
       disabled = false,
       toolbar = defaultToolbar,
-      menubar = false,
+      menubar = true,
       elementpath = false,
       contextmenu = [],
       className = "",
