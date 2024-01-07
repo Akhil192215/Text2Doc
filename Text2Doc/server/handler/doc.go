@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"text2doc/utils"
 
@@ -30,11 +31,11 @@ func GenerateDoc(c *fiber.Ctx) error {
 	}
 	c.Set("Content-Type", "application/pdf")
 	c.Set("Content-Disposition", "attachment; filename=meeting.pdf")
-	// defer func() {
-	// 	if err := os.Remove(pdfFilePath); err != nil {
-	// 		log.Println("Error deleting PDF file:", err)
-	// 	}
-	// }()
+	defer func() {
+		if err := os.Remove(pdfFilePath); err != nil {
+			log.Println("Error deleting PDF file:", err)
+		}
+	}()
 
 	return c.Send(pdfData)
 }
